@@ -1,12 +1,11 @@
 package hotelservice.models;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+@Entity @AllArgsConstructor @NoArgsConstructor
 public class Client {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

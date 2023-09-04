@@ -1,7 +1,7 @@
 package hotelservice.models;
 
 import hotelservice.enums.RoomType;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +14,10 @@ import java.util.List;
 public class Room {
 
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String roomNumer;
     private RoomType roomType;
+    @OneToMany(mappedBy = "room")
     private List<Reservation> resarvations;
 }
