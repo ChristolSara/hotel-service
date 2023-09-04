@@ -1,4 +1,4 @@
-package hotelservice.models;
+package hotelservice.enums;
 
 public enum ReservationStatus {
     CREATED, PENDING , CONFIRMED , CANCELED

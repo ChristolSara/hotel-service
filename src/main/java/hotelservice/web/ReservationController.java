@@ -1,9 +1,8 @@
 package hotelservice.web;
 
-import hotelservice.models.Resarvation;
-import hotelservice.repository.ResarvationRepository;
+import hotelservice.models.Reservation;
+import hotelservice.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,14 +10,14 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-public class ResarvationController {
-    private ResarvationRepository resarvationRepository;
+public class ReservationController {
+    private ReservationRepository resarvationRepository;
 
 
 
 
     @GetMapping("/resarvations")
-    public List<Resarvation> resarvationlist(){
+    public List<Reservation> resarvationlist(){
         return resarvationRepository.findAll();
     }
 }
