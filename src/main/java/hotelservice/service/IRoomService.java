@@ -12,5 +12,7 @@ public interface IRoomService {
     List<RoomDTO> getAllRooms();
     void deleteRoomById(Long id) throws RoomNotFoundException;
 
-    RoomDTO getRoomById(String roomNumber);
+    RoomDTO getRoomByNumber(String roomNumber) throws RoomNotFoundException;
+
+    RoomDTO findById(Long id) throws RoomNotFoundException;
 }

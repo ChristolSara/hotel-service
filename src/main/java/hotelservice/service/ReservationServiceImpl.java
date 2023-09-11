@@ -3,8 +3,7 @@ package hotelservice.service;
 import hotelservice.dto.ClientDTO;
 import hotelservice.dto.ReservationDTO;
 import hotelservice.dto.RoomDTO;
-import hotelservice.exceptions.RoomNotAvaibleException;
-import hotelservice.exceptions.RoomNotFoundException;
+import hotelservice.exceptions.*;
 import hotelservice.mappers.ClientMapper;
 import hotelservice.mappers.ReservationMapper;
 import hotelservice.mappers.RoomMapper;
@@ -15,11 +14,15 @@ import hotelservice.repository.ClientRepository;
 import hotelservice.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -47,8 +50,8 @@ public class ReservationServiceImpl implements IReservationService{
     }
 
     @Override
-    public ReservationDTO makeResevation(ClientDTO clientDTO, RoomDTO roomDTO, LocalDate checkin, LocalDate checkout) throws RoomNotFoundException, RoomNotAvaibleException {
-        RoomDTO foundRoom = roomService.getRoomById(roomDTO.getRoomNumber());
+    public ReservationDTO makeResevation(ClientDTO clientDTO, RoomDTO room, LocalDate checkin, LocalDate checkout) throws RoomNotFoundException, RoomNotAvaibleException {
+        RoomDTO foundRoom = roomService.getRoomByNumber(room.getRoomNumber());
 
         if(foundRoom == null){
             throw  new RoomNotFoundException("Room with number "+foundRoom.getRoomNumber()+ " is not found" );
@@ -86,17 +89,62 @@ public class ReservationServiceImpl implements IReservationService{
     }
 
     @Override
-    public void cancelReservation(Long reservationId) {
+    public void cancelReservation(Long reservationId) throws ResrvationNotFoundexception {
+        log.info("canceling reservation");
+
+        //check if the reservation exict in database
+        if(! reservationRepository.existsById(reservationId)){
+            throw  new ResrvationNotFoundexception("reservation with "+ reservationId +" not exist");
+        }
+        //found the reservation
+        Optional<Reservation> optionalReservation=reservationRepository.findById(reservationId);
+        if(optionalReservation.isEmpty()){
+            throw  new ResrvationNotFoundexception("reservation with "+reservationId+"  not found");
+        }
+        Reservation reservation= optionalReservation.get();
+        ReservationDTO reservationDTO=reservationMapper.fromReservation(reservation);
+        reservationRepository.delete(reservation);
+
 
     }
 
     @Override
-    public List<ReservationDTO> getresarvationByClient(ClientDTO clientDTO) {
-        return null;
+    public List<ReservationDTO> getresarvationByClient(ClientDTO clientDTO) throws ClientNotFoundException, ClientSaveException {
+
+        Client client = clientMapper.fromClientDTO(clientDTO);
+         Client existingClient = clientRepository.findByEmail(client.getEmail());
+
+         if(existingClient != null){
+             client = existingClient;
+         }else{
+             try {
+                 client = clientRepository.save(client);
+             }catch (DataAccessException ex){
+                 throw new ClientSaveException("failed to save the client in the database .", ex);
+             }
+         }
+
+
+         if(client == null){
+             throw  new ClientNotFoundException("Client not found");
+         }
+
+         List<Reservation> reservations = reservationRepository.findByClient(client);
+        return reservations.stream()
+                .map(reservationMapper::fromReservation)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ReservationDTO> getReservationByRoom(RoomDTO roomDTO) {
-        return null;
+
+        Room room= roomMapper.fromRoomDTO(roomDTO);
+        log.info("room entity :" + room);
+
+        List<Reservation> reservations = reservationRepository.findByRoom(room);
+
+        return reservations.stream()
+                .map(reservationMapper::fromReservation)
+                .collect(Collectors.toList());
     }
 }

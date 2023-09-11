@@ -4,7 +4,6 @@ import hotelservice.dto.RoomDTO;
 import hotelservice.exceptions.DuplicateRoomException;
 import hotelservice.exceptions.RoomNotFoundException;
 import hotelservice.mappers.RoomMapper;
-import hotelservice.models.Client;
 import hotelservice.models.Room;
 import hotelservice.repository.RoomRepository;
 import lombok.AllArgsConstructor;
@@ -57,6 +56,23 @@ public class RoomServiceImpl implements IRoomService{
     }
 
     @Override
+    public RoomDTO getRoomByNumber(String roomNumber) throws RoomNotFoundException {
+        // Retrieve the Room entity from the database by room number
+        Room room = roomRepository.findByRoomNumber(roomNumber);
+        if (room == null) {
+            throw new RoomNotFoundException("Room with number " + roomNumber + " not found.");
+        }
+
+        // Now, we need to check if the retrieved room actually has the same room number as requested
+        if (!room.getRoomNumber().equals(roomNumber)) {
+            throw new RoomNotFoundException("Room with number " + roomNumber + " not found.");
+        }
+
+        // Convert Room entity to RoomDTO using the RoomMapper
+        return roomMapper.fromRoom(room);
+    }
+
+    @Override
     public void deleteRoomById(Long id)  throws RoomNotFoundException{
         if(!roomRepository.existsById(id)){
             throw new RoomNotFoundException("Room with id : "+ id + " not found");
@@ -70,4 +86,14 @@ public class RoomServiceImpl implements IRoomService{
         RoomDTO roomDTO = roomMapper.fromRoom(room);
         roomRepository.delete(room);
     }
+
+
+
+    @Override
+    public RoomDTO findById(Long id) throws RoomNotFoundException {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new RoomNotFoundException("Room with ID: "+id+" Not Found!"));
+        return roomMapper.fromRoom(room);
+    }
+
 }

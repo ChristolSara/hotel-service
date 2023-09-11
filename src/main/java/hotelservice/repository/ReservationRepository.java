@@ -1,6 +1,8 @@
 package hotelservice.repository;
 
+import hotelservice.models.Client;
 import hotelservice.models.Reservation;
+import hotelservice.models.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +19,8 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
             "     OR (r.checkOUT > :checkInDate AND r.checkOUT <= :checkOutDate) " +
             "     OR (r.checkIN <= :checkInDate AND r.checkOUT >= :checkOutDate))")
     List<Reservation> findOverlappingReservation(@Param ("roomId")Long id, LocalDate checkINDate, LocalDate checkOUTDate);
+
+    List<Reservation> findByClient(Client client);
+
+    List<Reservation> findByRoom(Room room);
 }

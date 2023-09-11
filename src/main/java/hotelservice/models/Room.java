@@ -16,8 +16,10 @@ public class Room {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String roomNumer;
+    private String roomNumber;
     private RoomType roomType;
     @OneToMany(mappedBy = "room")
     private List<Reservation> resarvations;
+
+
 }
