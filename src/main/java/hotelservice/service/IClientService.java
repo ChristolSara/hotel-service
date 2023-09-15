@@ -14,4 +14,6 @@ public interface IClientService {
     ClientDTO updateClient(ClientDTO client);
     List<ClientDTO> gettAllClients();
     void deleteClientById(Long id) throws ClientNotFoundException;
+
+    ClientDTO getClientByMail(String email) throws ClientNotFoundException;
 }

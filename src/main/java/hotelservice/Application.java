@@ -16,18 +16,18 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(ReservationRepository reservationRepository) {
-        return
-                args -> {
-
-//                    reservationRepository.save(new Reservation(null, "res 1", 1200, CONFIRMED));
-//                    reservationRepository.save(new Reservation(null, "res 2", 1600, CREATED));
-//					reservationRepository.save(new Reservation(null,"res 3",4000,CANCELED));
-//                    reservationRepository.save(new Reservation(null, "res 4", 3500, CONFIRMED));
-
-
-                };
-    }
+//    @Bean
+//    CommandLineRunner commandLineRunner(ReservationRepository reservationRepository) {
+//        return
+//                args -> {
+//
+////                    reservationRepository.save(new Reservation(null, "res 1", 1200, CONFIRMED));
+////                    reservationRepository.save(new Reservation(null, "res 2", 1600, CREATED));
+////					reservationRepository.save(new Reservation(null,"res 3",4000,CANCELED));
+////                    reservationRepository.save(new Reservation(null, "res 4", 3500, CONFIRMED));
+//
+//
+//                };
+//    }
 
 }

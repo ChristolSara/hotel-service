@@ -81,4 +81,19 @@ public class ClientServiceImpl implements IClientService{
         ClientDTO clientDTO= clientMapper.fromClient(client);
         clientRepository.delete(client);
     }
+
+    @Override
+    public ClientDTO getClientByMail(String email) throws ClientNotFoundException {
+
+        Client client = clientRepository.findByEmail(email);
+        if(client == null){
+            throw  new ClientNotFoundException("client with email "+ email + "not found. ");
+        }
+
+        if(!client.getEmail().equals(email)){
+            throw new ClientNotFoundException("client with email "+email + "not found.");
+        }
+        return clientMapper.fromClient(client);
+
+    }
 }
