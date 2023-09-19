@@ -43,7 +43,7 @@ public class ReservationServiceImpl implements IReservationService{
         if(room==null){
             return false;
         }
-        List<Reservation> overlappingReservation = reservationRepository.findOverlappingReservation(room.getId(),checkINDate,checkOUTDate);
+        List<Reservation> overlappingReservation = reservationRepository.findOverlappingReservations(room.getId(),checkINDate,checkOUTDate);
         List<ReservationDTO> overlappingReservationsDTO= overlappingReservation.stream().map(reservationMapper::fromReservation).toList();
 
         return overlappingReservationsDTO.isEmpty();

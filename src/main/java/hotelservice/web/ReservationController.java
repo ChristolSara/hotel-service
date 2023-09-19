@@ -48,7 +48,7 @@ public class ReservationController {
         reservationService.cancelReservation(reservationId);
     }
 
-    @GetMapping("/client/{email")
+    @GetMapping("/client/{email}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public List<ReservationDTO> getReservationByClient(@PathVariable String email) throws ClientNotFoundException, ClientSaveException{
         ClientDTO clientDTO = new ClientDTO();

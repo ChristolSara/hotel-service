@@ -1,5 +1,6 @@
 package hotelservice.security;
 
+
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -36,10 +37,10 @@ import java.util.List;
 public class SecurityConfig {
 
     @Value("${jwt.secret}")
-    private  String secretKey;
-    @Bean
-    public PasswordEncoder passwordEncoder(){
+    private String secretKey;
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
